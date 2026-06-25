@@ -1,4 +1,4 @@
-# 🏛️ Procesador Automático de Facturas — H. Cámara de Senadores de Mendoza
+# 🏛️ Procesador Automático de Facturas
 
 Sistema web construido sobre **Google Apps Script** para la automatización de procesos administrativos: procesamiento de facturas EDEMSA con IA, escaneo inteligente de tickets de caja chica, despacho oficial de órdenes de compra y un asistente de consultas en lenguaje natural.
 
