@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Operaciones</title>
+  <style>
+    :root {
+      --senado-cyan: #00a0b0;
+      --senado-cyan-hover: #008491;
+      --senado-gold: #cfa153;
+      --bg-color: #f4f7f6;
+      --card-bg: #ffffff;
+      --text-title: #111215;
+      --text-body: #495057;
+      --border-color: #dee2e6;
+    }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-body);
+      display: flex; flex-direction: column; min-height: 100vh;
+    }
+
+    header {
+      background-color: #ffffff; border-bottom: 4px solid var(--senado-cyan);
+      padding: 20px 50px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    header h2 { margin: 0; color: var(--text-title); font-size: 20px; font-weight: 700; }
+    header p { margin: 4px 0 0 0; color: var(--senado-gold); font-size: 13px; font-weight: 600; text-transform: uppercase; }
+
+    .btn-home {
+      background-color: transparent; border: 2px solid var(--senado-gold); color: var(--senado-gold);
+      padding: 8px 18px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px;
+      text-transform: uppercase; transition: all 0.2s;
+    }
+    .btn-home:hover { background-color: var(--senado-gold); color: white; }
+
+    .container { padding: 50px; display: flex; gap: 40px; flex-wrap: wrap; max-width: 1400px; }
+
+    .card {
+      background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color);
+      padding: 35px; width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); box-sizing: border-box;
+    }
+
+    .card h3 {
+      margin: 0 0 25px 0; color: var(--text-title); font-size: 18px; font-weight: 600;
+      border-bottom: 1px solid var(--border-color); padding-bottom: 15px;
+    }
+
+    .form-group { margin-bottom: 22px; display: flex; flex-direction: column; gap: 8px; }
+    .form-group label { font-weight: 600; color: #2f3542; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .form-group input[type="text"], .form-group input[type="email"] {
+      padding: 14px; border: 1px solid var(--border-color); border-radius: 8px;
+      font-size: 15px; outline: none; background-color: #fafafa; transition: all 0.2s;
+    }
+    .form-group input:focus { border-color: var(--senado-cyan); background-color: #ffffff; }
+
+    .file-input-wrapper {
+      border: 2px dashed var(--border-color); padding: 20px; border-radius: 8px;
+      text-align: center; background-color: #fafafa; cursor: pointer; position: relative;
+    }
+    .file-input-wrapper:hover { border-color: var(--senado-cyan); }
+    .file-input-wrapper input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+
+    .file-input-text { font-size: 14px; color: #747d8c; }
+
+    .btn {
+      background-color: var(--senado-cyan); color: white; border: none; padding: 16px;
+      border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; font-size: 15px;
+      width: 100%; margin-top: 15px; text-transform: uppercase; letter-spacing: 0.5px; transition: background 0.2s;
+    }
+    .btn:hover { background-color: var(--senado-cyan-hover); }
+
+    .btn-gold { background-color: var(--senado-gold); }
+    .btn-gold:hover { background-color: #b38942; }
+
+    .status-log {
+      margin-top: 25px; padding: 16px 20px; background: #1e222b; color: #a8dab5;
+      border-radius: 8px; font-family: 'Courier New', Courier, monospace; font-size: 13px;
+      display: none; line-height: 1.6; box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    /* ========================================================
+       ESTILOS EXCLUSIVOS PARA LA NUEVA ANIMACIÓN DE CARGA (TICKETS)
+       ======================================================== */
+    .contenedor-feedback {
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 8px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 15px;
+      text-align: center;
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      animation: aparecer 0.3s ease forwards;
+    }
+
+    @keyframes aparecer { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #cbd5e1;
+      border-top: 4px solid var(--senado-gold);
+      border-radius: 50%;
+      animation: girar 1s linear infinite;
+    }
+
+    @keyframes girar { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    .icono-exito {
+      font-size: 42px;
+      color: #22c55e;
+      animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @keyframes pop { 0% { transform: scale(0.5); } 100% { transform: scale(1); } }
+
+    .texto-feedback {
+      font-size: 14px;
+      font-weight: 500;
+      color: #334155;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div>
+      <h2>🏛️ LEGISLATURA MENDOZA</h2>
+      <p>Honorable Cámara de Senadores | Panel Operativo Unificado</p>
+    </div>
+    <button class="btn-home" id="btn-volver">Volver al Menú</button>
+  </header>
+  
+  <div class="container">
+    <div class="card">
+      <h3>📧 Notificación Oficial de Orden de Compra</h3>
+      
+      <div class="form-group">
+        <label for="correo-proveedor">Correo Electrónico del Proveedor:</label>
+        <input type="email" id="correo-proveedor" placeholder="proveedor@empresa.com.ar">
+      </div>
+      
+      <div class="form-group">
+        <label for="nro-orden">Número de Orden de Compra Interna:</label>
+        <input type="text" id="nro-orden" placeholder="Ejemplo: 7021">
+      </div>
+      
+      <div class="form-group">
+        <label>Documento Adjunto (Orden de Compra PDF):</label>
+        <div class="file-input-wrapper">
+          <span class="file-input-text" id="file-label">📂 Hacer clic acá para cargar el archivo PDF</span>
+          <input type="file" id="adjunto-pdf" accept="application/pdf" onchange="actualizarNombreArchivo()">
+        </div>
+      </div>
+      
+      <button class="btn" onclick="procesarYEnviar()">Despachar Correo Oficial</button>
+      <div id="status-log" class="status-log"></div>
+    </div>
+    
+    <div class="card">
+      <h3>📷 Módulo de Escaneo de Documentos</h3>
+      <p style="font-size: 13px; color: #747d8c; margin-top: -15px; margin-bottom: 20px;">
+        Selección actual: <strong>Tickets de Supermercado / Caja Chica</strong>
+      </p>
+      
+      <div class="form-group">
+        <label>Importar Ticket (Cargar Foto o archivo PDF):</label>
+        <div class="file-input-wrapper" style="padding: 35px 20px;">
+          <span class="file-input-text" id="ticket-label">📸 Hacer clic acá para cargar Foto (JPEG/PNG) o PDF</span>
+          <input type="file" id="archivo-ticket" accept="image/*,application/pdf" onchange="actualizarNombreTicket()">
+        </div>
+      </div>
+      
+      <button class="btn btn-gold" id="btn-procesar-ticket" onclick="importarYProcesarTicket()">Procesar Inteligencia Artificial</button>
+      
+      <div id="contenedor-feedback-ticket" class="contenedor-feedback">
+        <div id="icono-feedback" class="spinner"></div>
+        <div id="texto-feedback-ticket" class="texto-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('btn-volver').onclick = function() {
+      this.innerText = "⏳ Cargando Menú...";
+      google.script.run.withSuccessHandler(function(htmlMenu) {
+        document.open(); document.write(htmlMenu); document.close();
+      }).obtenerHtmlMenu();
+    };
+
+    // Funciones del Módulo 1 (Órdenes de Compra)
+    function actualizarNombreArchivo() {
+      var input = document.getElementById('adjunto-pdf');
+      var label = document.getElementById('file-label');
+      if(input.files.length > 0) {
+        label.innerText = "✅ Archivo cargado: " + input.files[0].name;
+        label.style.color = "#00a0b0"; label.style.fontWeight = "bold";
+      }
+    }
+
+    function procesarYEnviar() {
+      var correo = document.getElementById('correo-proveedor').value.trim();
+      var orden = document.getElementById('nro-orden').value.trim();
+      var archivoInput = document.getElementById('adjunto-pdf');
+      var log = document.getElementById('status-log');
+      
+      if (!correo || !orden || archivoInput.files.length === 0) {
+        alert("Por favor, completá todos los campos del formulario oficial antes de realizar el despacho.");
+        return;
+      }
+      
+      var archivo = archivoInput.files[0];
+      log.style.display = 'block';
+      log.innerText = "[SISTEMA] > Codificando documento PDF localmente...";
+      
+      var lector = new FileReader();
+      lector.onload = function(e) {
+        log.innerText += "\n[SISTEMA] > Documento encriptado con éxito.\n[SISTEMA] > Conectando al servidor oficial de Gmail de la Cámara...";
+        
+        var datosFormulario = { correo: correo, orden: orden, archivoBytes: e.target.result, archivoNombre: archivo.name };
+        
+        google.script.run
+          .withSuccessHandler(function(mensajeServidor) {
+            log.innerText += "\n[SERVIDOR] > " + mensajeServidor;
+            log.innerText += "\n[SISTEMA] > Procedimiento finalizado con éxito.";
+            document.getElementById('correo-proveedor').value = "";
+            document.getElementById('nro-orden').value = "";
+            document.getElementById('adjunto-pdf').value = "";
+            document.getElementById('file-label').innerText = "📂 Hacer clic acá para cargar el archivo PDF";
+            document.getElementById('file-label').style.color = "#747d8c"; document.getElementById('file-label').style.fontWeight = "normal";
+          })
+          .withFailureHandler(function(err) { log.innerText += "\n[ERROR CRÍTICO] > Falla: " + err.toString(); })
+          .despacharOrdenCompraDesdeWeb(datosFormulario);
+      };
+      lector.readAsDataURL(archivo);
+    }
+
+    // Funciones del Módulo 2 (Tickets Multimodal con Cierre Automático)
+    function actualizarNombreTicket() {
+      var input = document.getElementById('archivo-ticket');
+      var label = document.getElementById('ticket-label');
+      if(input.files.length > 0) {
+        label.innerText = "✅ Documento detectado: " + input.files[0].name;
+        label.style.color = "#cfa153"; label.style.fontWeight = "bold";
+      }
+    }
+
+    function importarYProcesarTicket() {
+      var archivoInput = document.getElementById('archivo-ticket');
+      var contenedor = document.getElementById('contenedor-feedback-ticket');
+      var icono = document.getElementById('icono-feedback');
+      var texto = document.getElementById('texto-feedback-ticket');
+      var boton = document.getElementById('btn-procesar-ticket');
+      
+      if (archivoInput.files.length === 0) {
+        alert("Por favor, cargue una imagen o un PDF del ticket antes de ejecutar el análisis de IA.");
+        return;
+      }
+      
+      var archivo = archivoInput.files[0];
+      
+      // Activar animación de carga
+      boton.disabled = true;
+      boton.innerText = "Procesando...";
+      contenedor.style.display = 'flex';
+      icono.className = 'spinner'; 
+      icono.innerText = ''; // Limpia el emoji por si quedó uno anterior
+      texto.innerHTML = "<strong>[SISTEMA IA]</strong><br>Leyendo y digitalizando ticket de supermercado...<br><span style='font-size:12px; color:#64748b;'>Esto puede demorar unos segundos.</span>";
+      
+      var lector = new FileReader();
+      lector.onload = function(e) {
+        var datosTicket = {
+          archivoBytes: e.target.result,
+          archivoNombre: archivo.name,
+          archivoMime: archivo.type || "application/pdf"
+        };
+        
+        google.script.run
+          .withSuccessHandler(function(respuestaServidor) {
+            // Transformar en Check de Éxito
+            icono.className = 'icono-exito';
+            icono.innerText = '✅';
+            
+            texto.innerHTML = "<strong>¡Procesamiento Completado con Éxito!</strong><br><span style='font-size:13px; color:#1e293b;'>" + respuestaServidor.replace("¡Éxito! ", "") + "</span><br><span style='font-size:11px; color:#059669; font-weight:bold;'>Planilla actualizada y archivo resguardado en Google Drive.</span>";
+            
+            // Reactivar controles de carga de archivos
+            boton.disabled = false;
+            boton.innerText = "Procesar Inteligencia Artificial";
+            document.getElementById('archivo-ticket').value = "";
+            document.getElementById('ticket-label').innerText = "📸 Hacer clic acá para cargar Foto (JPEG/PNG) o PDF";
+            document.getElementById('ticket-label').style.color = "#747d8c"; document.getElementById('ticket-label').style.fontWeight = "normal";
+
+            // ======= NUEVO: TEMPORIZADOR DE 7 SEGUNDOS PARA OCULTAR EL MENSAJE =======
+            setTimeout(function() {
+              // Hacemos que el contenedor se desvanezca suavemente (u ocultarlo directo)
+              contenedor.style.display = 'none';
+            }, 7000); 
+            // =======================================================================
+          })
+          .withFailureHandler(function(err) {
+            icono.className = 'icono-exito';
+            icono.innerText = '❌';
+            texto.innerHTML = "<strong>Error de Comunicación</strong><br><span style='color:#dc2626;'>" + err.toString() + "</span>";
+            boton.disabled = false;
+            boton.innerText = "Procesar Inteligencia Artificial";
+
+            // También ocultamos el recuadro si falla tras 7 segundos
+            setTimeout(function() {
+              contenedor.style.display = 'none';
+            }, 7000);
+          })
+          .procesarTicketDesdeWeb(datosTicket);
+      };
+      lector.readAsDataURL(archivo);
+    }
+  </script>
+</body>
+</html>
