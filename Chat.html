@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asistente IA - Consultas</title>
+  <style>
+    :root {
+      --senado-cyan: #00a0b0;
+      --senado-gold: #cfa153;
+      --bg-color: #f4f7f6;
+      --card-bg: #ffffff;
+      --text-title: #111215;
+      --text-body: #495057;
+      --border-color: #dee2e6;
+      --user-msg-bg: #e6f6f8;
+    }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-body);
+      display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+    }
+
+    header {
+      background-color: #ffffff; border-bottom: 4px solid var(--senado-cyan);
+      padding: 20px 50px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+      display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+    }
+
+    header h2 { margin: 0; color: var(--text-title); font-size: 20px; font-weight: 700; }
+    header p { margin: 4px 0 0 0; color: var(--senado-gold); font-size: 13px; font-weight: 600; text-transform: uppercase; }
+
+    .btn-home {
+      background-color: transparent; border: 2px solid var(--senado-gold); color: var(--senado-gold);
+      padding: 8px 18px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px;
+      text-transform: uppercase; transition: all 0.2s;
+    }
+    .btn-home:hover { background-color: var(--senado-gold); color: white; }
+
+    .workspace { flex: 1; display: flex; overflow: hidden; }
+
+    .sidebar {
+      width: 320px; background-color: #ffffff; border-right: 1px solid var(--border-color);
+      padding: 35px 25px; display: flex; flex-direction: column; gap: 20px; box-sizing: border-box; flex-shrink: 0;
+    }
+
+    .sidebar h3 { margin: 0; color: var(--text-title); font-size: 15px; font-weight: 600; text-transform: uppercase; }
+    .sidebar p { font-size: 13px; color: var(--text-body); line-height: 1.6; margin: 0; }
+
+    .info-card { background-color: var(--bg-color); border-radius: 8px; padding: 20px; border: 1px solid var(--border-color); }
+    .info-card h4 { margin: 0 0 10px 0; font-size: 12px; font-weight: 600; color: var(--text-title); text-transform: uppercase; }
+    .info-card ul { margin: 0; padding-left: 18px; font-size: 13px; color: var(--text-body); display: flex; flex-direction: column; gap: 8px; }
+
+    .chat-area { flex: 1; display: flex; flex-direction: column; background-color: var(--bg-color); }
+
+    #chat-container { flex: 1; padding: 40px 50px; overflow-y: auto; display: flex; flex-direction: column; gap: 25px; box-sizing: border-box; }
+
+    .message {
+      max-width: 65%; padding: 15px 22px; border-radius: 12px; font-size: 15px; line-height: 1.6;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.01); word-wrap: break-word; white-space: pre-wrap;
+      border: 1px solid var(--border-color); animation: fadeIn 0.2s ease forwards;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    .bot { background-color: #ffffff; color: var(--text-body); margin-right: auto; border-top-left-radius: 4px; }
+    .user { background-color: var(--user-msg-bg); color: #006873; border-color: #bce3e6; margin-left: auto; border-top-right-radius: 4px; font-weight: 500; }
+
+    .input-wrapper { padding: 20px 50px 40px 50px; background: linear-gradient(transparent, var(--bg-color) 30%); }
+
+    .input-box {
+      display: flex; gap: 15px; background: #ffffff; padding: 10px 12px 10px 20px;
+      border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+      max-width: 1000px; box-sizing: border-box; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-box:focus-within { border-color: var(--senado-cyan); box-shadow: 0 4px 20px rgba(0, 160, 176, 0.12); }
+
+    input { flex: 1; border: none; font-size: 16px; outline: none; background: transparent; color: var(--text-title); }
+    input::placeholder { color: #a4b0be; }
+
+    .btn-send {
+      background-color: var(--senado-cyan); color: white; border: none; padding: 12px 30px;
+      border-radius: 6px; font-size: 14px; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: background 0.2s;
+    }
+    .btn-send:hover { background-color: #008491; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div>
+      <h2>🏛️ LEGISLATURA MENDOZA</h2>
+      <p>Honorable Cámara de Senadores | Asistente de Consultas IA</p>
+    </div>
+    <button class="btn-home" id="btn-volver">Volver al Menú</button>
+  </header>
+  
+  <div class="workspace">
+    <div class="sidebar">
+      <h3>🤖 Analista de Datos</h3>
+      <p>Este entorno inteligente procesa en lenguaje natural las filas automatizadas desde tu planilla de EDEMSA.</p>
+      <div class="info-card">
+        <h4>Consultas admitidas:</h4>
+        <ul>
+          <li>Identificar titulares por NIC.</li>
+          <li>Calcular montos totales facturados.</li>
+          <li>Revisar mediciones en kWh.</li>
+          <li>Direcciones de suministros oficiales.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chat-area">
+      <div id="chat-container">
+        <div class="message bot">¡Hola! El canal inteligente corporativo está listo. ¿Qué consulta censal o numérica necesitás realizar sobre las facturas?</div>
+      </div>
+      
+      <div class="input-wrapper">
+        <div class="input-box">
+          <input type="text" id="user-input" placeholder="Ej: ¿Cuánto debe pagar el NIC 3114058?" onkeypress="if(event.key === 'Enter') enviarPregunta()">
+          <button class="btn-send" onclick="enviarPregunta()">Consultar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Inyección limpia corregida para evitar el congelamiento de pantalla
+    document.getElementById('btn-volver').onclick = function() {
+      this.innerText = "⏳ Cargando Menú...";
+      google.script.run.withSuccessHandler(function(htmlMenu) {
+        document.open(); document.write(htmlMenu); document.close();
+      }).obtenerHtmlMenu();
+    };
+
+    function enviarPregunta() {
+      var input = document.getElementById('user-input');
+      var pregunta = input.value.trim();
+      if (!pregunta) return;
+
+      appendMessage(pregunta, 'user');
+      input.value = '';
+
+      var botMessageDiv = appendMessage('[SISTEMA] > Consultando registros de celdas estructuradas...', 'bot');
+
+      google.script.run
+        .withSuccessHandler(function(respuesta) { botMessageDiv.innerText = respuesta; })
+        .withFailureHandler(function() { botMessageDiv.innerText = '❌ Error de comunicación con el Sheets central.'; })
+        .procesarPreguntaWeb(pregunta);
+    }
+
+    function appendMessage(text, sender) {
+      var container = document.getElementById('chat-container');
+      var div = document.createElement('div');
+      div.className = 'message ' + sender; div.innerText = text;
+      container.appendChild(div); container.scrollTop = container.scrollHeight;
+      return div;
+    }
+  </script>
+</body>
+</html>
