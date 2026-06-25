@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cámara de Senadores - Panel Central</title>
+  <style>
+    :root {
+      --senado-cyan: #00a0b0;
+      --senado-gold: #cfa153;
+      --bg-color: #f4f7f6;
+      --text-main: #2f3542;
+      --border-color: #e4e7eb;
+    }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-main);
+      display: flex; flex-direction: column; min-height: 100vh;
+    }
+
+    header {
+      background-color: #ffffff; border-bottom: 4px solid var(--senado-cyan);
+      padding: 25px 50px; box-shadow: 0 2px 15px rgba(0,0,0,0.03); text-align: center;
+    }
+
+    header h2 { margin: 0; color: #111215; font-size: 24px; font-weight: 700; }
+    header p { margin: 6px 0 0 0; color: var(--senado-gold); font-size: 14px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+
+    .main-container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 50px; }
+    .grid-menu { display: grid; grid-template-columns: repeat(2, 1fr); gap: 35px; max-width: 900px; width: 100%; }
+
+    .menu-card {
+      background: #ffffff; border: 1px solid var(--border-color); border-radius: 14px;
+      padding: 35px; box-shadow: 0 10px 25px rgba(0,0,0,0.02);
+      display: flex; flex-direction: column; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      cursor: pointer; position: relative; overflow: hidden;
+    }
+
+    .menu-card::before { content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%; background-color: var(--senado-gold); }
+
+    .menu-card:hover {
+      transform: translateY(-5px); border-color: var(--senado-cyan);
+      box-shadow: 0 12px 30px rgba(0, 160, 176, 0.1);
+    }
+
+    .menu-card h3 { margin: 0 0 12px 0; font-size: 20px; color: #111215; display: flex; align-items: center; gap: 10px; }
+    .menu-card p { margin: 0 0 25px 0; font-size: 14px; color: #747d8c; line-height: 1.6; flex: 1; }
+
+    .btn-card {
+      background-color: var(--senado-cyan); color: white; border: none; padding: 12px 20px;
+      border-radius: 8px; font-weight: bold; font-size: 14px; text-transform: uppercase;
+      letter-spacing: 0.5px; align-self: flex-start; transition: background 0.2s;
+    }
+
+    .menu-card:hover .btn-card { background-color: #008491; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h2>🏛️ LEGISLATURA MENDOZA</h2>
+    <p>Honorable Cámara de Senadores | Sistema Integrado de Gestión</p>
+  </header>
+
+  <div class="main-container">
+    <div class="grid-menu">
+      
+      <div class="menu-card" id="card-chat">
+        <h3>Asistente IA de Consultas</h3>
+        <p>Realizá preguntas en lenguaje natural sobre las celdas de facturación y el historial acumulado de tickets en el sistema.</p>
+        <button class="btn-card">Abrir Asistente</button>
+      </div>
+
+      <div class="menu-card" id="card-operaciones">
+        <h3>Panel Operativo de Documentos</h3>
+        <p>Módulo para el despacho oficial de Órdenes de Compra e importación/escaneo multimodal inteligente de tickets.</p>
+        <button class="btn-card">Abrir Módulo</button>
+      </div>
+
+      <div class="menu-card" id="card-excel">
+        <h3>Base de Datos General (Sheets)</h3>
+        <p>Accedé de forma directa a la planilla de cálculo donde se registran y ordenan las filas automatizadas.</p>
+        <button class="btn-card">Ver Planilla</button>
+      </div>
+
+      <div class="menu-card" id="card-drive">
+        <h3>Carpeta de Entrada de Archivos</h3>
+        <p>Abrí el repositorio de Google Drive donde se cargan los archivos PDF para procesamiento automático.</p>
+        <button class="btn-card">Ver Repositorio</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    google.script.run.withSuccessHandler(function(enlaces) {
+      document.getElementById('card-chat').onclick = function() { window.location.href = enlaces.urlChat; };
+      document.getElementById('card-operaciones').onclick = function() { window.location.href = enlaces.urlOperaciones; };
+      document.getElementById('card-excel').onclick = function() { window.open(enlaces.urlExcel, '_blank'); };
+      document.getElementById('card-drive').onclick = function() { window.open(enlaces.urlCarpeta, '_blank'); };
+    }).obtenerConfiguracionSistema();
+  </script>
+</body>
+</html>
